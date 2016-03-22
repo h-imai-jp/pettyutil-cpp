@@ -12,6 +12,8 @@
 #include <string>
 #include <utility>
 
+#include "petty_helper.h"
+
 namespace pettyutil {
 
 /// Base64 charactor table.
@@ -73,7 +75,7 @@ inline bool IsBase64(const std::string& test) {
 /// @return true if base64 encoded string, or false otherwise.
 ///
 inline bool IsBase64(const char* test) {
-  return IsBase64(std::string((test != nullptr) ? test : ""));
+  return IsBase64(std::string(NullOption(test, "")));
 }
 
 /// Get Base64 decoded size.
@@ -96,7 +98,7 @@ inline std::size_t GetBase64Size(const std::string& test) {
 /// @return decoded size if base64 encoded string, or zero otherwise.
 ///
 inline std::size_t GetBase64Size(const char* test) {
-  return GetBase64Size(std::string((test != nullptr) ? test : ""));
+  return GetBase64Size(std::string(NullOption(test, "")));
 }
 
 /// Base64 decoding.
@@ -136,7 +138,7 @@ inline bool DecodeBase64(const std::string& base64, OutputIterator first) {
 ///
 template <typename OutputIterator>
 inline bool DecodeBase64(const char* base64, OutputIterator first) {
-  return DecodeBase64(std::string((base64 != nullptr) ? base64 : ""), first);
+  return DecodeBase64(std::string(NullOption(base64, "")), first);
 }
 
 }  // namespace pettyutil
