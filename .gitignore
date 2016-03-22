@@ -26,3 +26,13 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio files
+*.tlog
+*.manifest
+*.manifest.res
+*_manifest.rc
+*.lastbuildstate
+*.idb
+*.sdf
+*/ipch
