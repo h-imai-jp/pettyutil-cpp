@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\test\src\base64_test.cpp" />
+    <ClCompile Include="..\test\src\task_test.cpp" />
     <ClCompile Include="..\test\src\unsorted_map_test.cpp" />
   </ItemGroup>
   <ItemGroup>

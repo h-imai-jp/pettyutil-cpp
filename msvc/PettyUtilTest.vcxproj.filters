@@ -24,6 +24,9 @@
     <ClCompile Include="..\test\src\unsorted_map_test.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="..\test\src\task_test.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pettyutil\base64.h">
