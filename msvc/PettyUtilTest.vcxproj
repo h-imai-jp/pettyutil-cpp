@@ -81,13 +81,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\json.cpp" />
     <ClCompile Include="..\test\src\base64_test.cpp" />
+    <ClCompile Include="..\test\src\json_test.cpp" />
     <ClCompile Include="..\test\src\string_util_test.cpp" />
     <ClCompile Include="..\test\src\task_test.cpp" />
     <ClCompile Include="..\test\src\unsorted_map_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\pettyutil\base64.h" />
+    <ClInclude Include="..\include\pettyutil\json.h" />
     <ClInclude Include="..\include\pettyutil\petty_helper.h" />
     <ClInclude Include="..\include\pettyutil\string_util.h" />
     <ClInclude Include="..\include\pettyutil\task.h" />

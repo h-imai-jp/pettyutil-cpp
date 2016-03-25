@@ -27,6 +27,12 @@
     <ClCompile Include="..\test\src\task_test.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\json.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\test\src\json_test.cpp">
+      <Filter>Source Files\test</Filter>
+    </ClCompile>
     <ClCompile Include="..\test\src\string_util_test.cpp">
       <Filter>Source Files\test</Filter>
     </ClCompile>
@@ -42,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\pettyutil\petty_helper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\pettyutil\json.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\pettyutil\string_util.h">
