@@ -46,16 +46,6 @@ inline std::string StringFormatV(const char* format, va_list args) {
 /// String format.
 ///
 /// @param format string format.
-/// @param args   argument.
-/// @return string.
-///
-inline std::string StringFormatV(const std::string& format, va_list args) {
-  return StringFormatV(format.c_str(), args);
-}
-
-/// String format.
-///
-/// @param format string format.
 /// @return string.
 ///
 inline std::string StringFormat(const char* format, ...) {
@@ -66,44 +56,34 @@ inline std::string StringFormat(const char* format, ...) {
   return std::move(str);
 }
 
-/// String format.
-///
-/// @param format string format.
-/// @return string.
-///
-inline std::string StringFormat(const std::string& format, ...) {
-  va_list args;
-  va_start(args, format);
-  std::string str = StringFormatV(format, args);
-  va_end(args);
-  return std::move(str);
-}
-
-/// String front whitespace trim.
+/// String front whitespace length.
 ///
 /// @param str string.
-/// @return trim string.
+/// @return whitespace length.
 ///
-inline const char* StringFrontTrim(const char* str) {
+inline std::string::size_type StringFrontWhitespaceLength(const char* str) {
+  std::string::size_type length = 0;
+
   if (str != nullptr) {
-    while (*str != '\0') {
-      if (((*str >= 0x09) && (*str <= 0x0d)) || (*str == 0x20)) {
-        str++;
+    char character;
+    while ((character = str[length]) != '\0') {
+      if (((character >= 0x09) && (character <= 0x0d)) || (character == 0x20)) {
+        length++;
       } else {
         break;
       }
     }
   }
 
-  return str;
+  return length;
 }
 
-/// String back whitespace trim length.
+/// String back whitespace length.
 ///
 /// @param str string.
-/// @return trim string length.
+/// @return whitespace length.
 ///
-inline std::string::size_type StringBackTrimLength(const char* str) {
+inline std::string::size_type StringBackWhitespaceLength(const char* str) {
   std::size_t length = 0;
 
   if (str != nullptr) {
@@ -121,14 +101,33 @@ inline std::string::size_type StringBackTrimLength(const char* str) {
   return length;
 }
 
+/// String front whitespace trim.
+///
+/// @param str string.
+/// @return trim string.
+///
+inline std::string StringFrontTrim(const char* str) {
+  const char* front_trim = str + StringFrontWhitespaceLength(str);
+  return std::string(front_trim);
+}
+
+/// String back whitespace trim.
+///
+/// @param str string.
+/// @return trim string.
+///
+inline std::string StringBackTrim(const char* str) {
+  return std::string(str, StringBackWhitespaceLength(str));
+}
+
 /// String both ends whitespace trim.
 ///
 /// @param str string.
 /// @return trim string.
 ///
 inline std::string StringTrim(const char* str) {
-  const char* front_trim = StringFrontTrim(str);
-  return std::string(front_trim, StringBackTrimLength(front_trim));
+  const char* front_trim = str + StringFrontWhitespaceLength(str);
+  return std::string(front_trim, StringBackWhitespaceLength(front_trim));
 }
 
 /// Try convert string to integer.
@@ -145,7 +144,7 @@ inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
   }
 
   // front trim
-  str = StringFrontTrim(str);
+  str = str + StringFrontWhitespaceLength(str);
 
   // sign
   Integer sign;
@@ -180,8 +179,8 @@ inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
     radix = 10;
   }
 
-  // right trim
-  std::size_t length = StringBackTrimLength(str);
+  // back trim
+  std::size_t length = StringBackWhitespaceLength(str);
   if (length == 0) {
     return false;
   }
@@ -213,18 +212,6 @@ inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
   }
 
   return true;
-}
-
-/// Try convert string to integer.
-///
-/// @param str   numeric string.
-/// @param radix radix.
-/// @param value output value.
-/// @return true if convert successful, otherwise false.
-///
-template <typename Integer>
-inline bool TryStringToInteger(const std::string& str, int radix, Integer* value) {
-  return TryStringToInteger(str.c_str(), radix, value);
 }
 
 /// Convert string to integer.
