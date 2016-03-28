@@ -67,15 +67,6 @@ class JsonObject {
   ///
   virtual std::unique_ptr<bool> ToBoolean(const std::string& name) const = 0;
 
-  /// Get boolean value mapped by name, or optional value.
-  ///
-  /// @param name   mapping name.
-  /// @param option option value.
-  /// @return the value mapped by name if it exists and is a boolean,
-  ///         or option value otherwise.
-  ///
-  virtual bool OptionBoolean(const std::string& name, bool option) const = 0;
-
   /// Get string value mapped by name.
   ///
   /// @param name mapping name.
@@ -94,16 +85,6 @@ class JsonObject {
   virtual std::unique_ptr<std::string> ToString(
       const std::string& name) const = 0;
 
-  /// Get string value mapped by name, or optional value.
-  ///
-  /// @param name   mapping name.
-  /// @param option option value.
-  /// @return the value mapped by name if it exists and is a string,
-  ///         or option value otherwise.
-  ///
-  virtual std::string OptionString(const std::string& name,
-                                   const std::string& option) const = 0;
-
   /// Get 32bit integer value mapped by name.
   ///
   /// @param name mapping name.
@@ -121,16 +102,6 @@ class JsonObject {
   ///
   virtual std::unique_ptr<std::int32_t> ToInt32(
       const std::string& name) const = 0;
-
-  /// Get 32bit integer value mapped by name, or optional value.
-  ///
-  /// @param name   mapping name.
-  /// @param option option value.
-  /// @return the value mapped by name if it exists and is a 32bit integer,
-  ///         or option value otherwise.
-  ///
-  virtual std::int32_t OptionInt32(const std::string& name,
-                                   std::int32_t option) const = 0;
 
   /// Get object value mapped by name.
   ///
@@ -256,15 +227,6 @@ class JsonArray {
   ///
   virtual std::unique_ptr<bool> ToBoolean(std::size_t index) const = 0;
 
-  /// Get boolean value at index, or optional value.
-  ///
-  /// @param index  array index.
-  /// @param option option value.
-  /// @return the value at index if it exists and is a boolean,
-  ///         or option value otherwise.
-  ///
-  virtual bool OptionBoolean(std::size_t index, bool option) const = 0;
-
   /// Get string value at index.
   ///
   /// @param index array index.
@@ -281,16 +243,6 @@ class JsonArray {
   ///
   virtual std::unique_ptr<std::string> ToString(std::size_t index) const = 0;
 
-  /// Get string value at index, or optional value.
-  ///
-  /// @param index  array index.
-  /// @param option option value.
-  /// @return the value at index if it exists and is a string,
-  ///         or option value otherwise.
-  ///
-  virtual std::string OptionString(std::size_t index,
-                                   const std::string& option) const = 0;
-
   /// Get 32bit integer value at index.
   ///
   /// @param index array index.
@@ -306,16 +258,6 @@ class JsonArray {
   ///         or can be coerced to a 32bit integer, or null otherwise.
   ///
   virtual std::unique_ptr<std::int32_t> ToInt32(std::size_t index) const = 0;
-
-  /// Get 32bit integer value at index, or optional value.
-  ///
-  /// @param index  array index.
-  /// @param option option value.
-  /// @return the value at index if it exists and is a 32bit integer,
-  ///         or option value otherwise.
-  ///
-  virtual std::int32_t OptionInt32(std::size_t index,
-                                   std::int32_t option) const = 0;
 
   /// Get object value at index.
   ///
