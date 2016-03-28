@@ -55,10 +55,12 @@ inline std::string EncodeBase64(InputIterator first, InputIterator last) {
 
 /// Check Base64 encoded.
 ///
-/// @param test test string.
+/// @param base64 test string.
 /// @return true if base64 encoded string, or false otherwise.
 ///
-inline bool IsBase64(const std::string& test) {
+inline bool IsBase64(const char* base64) {
+  const std::string test(NullOption(base64, ""));
+
   if (test.empty() || ((test.length() % 4) != 0)) {
     return false;
   } else {
@@ -69,36 +71,19 @@ inline bool IsBase64(const std::string& test) {
   }
 }
 
-/// Check Base64 encoded.
-///
-/// @param test test string.
-/// @return true if base64 encoded string, or false otherwise.
-///
-inline bool IsBase64(const char* test) {
-  return IsBase64(std::string(NullOption(test, "")));
-}
-
 /// Get Base64 decoded size.
 ///
-/// @param test test string.
+/// @param base64 test string.
 /// @return decoded size if base64 encoded string, or zero otherwise.
 ///
-inline std::size_t GetBase64Size(const std::string& test) {
-  if (!IsBase64(test)) {
+inline std::size_t GetBase64Size(const char* base64) {
+  if (!IsBase64(base64)) {
     return 0;
   } else {
+    const std::string test(base64);
     std::string::size_type pos = test.find_last_not_of('=');
     return ((test.length() / 4) * 3) - (test.length() - (pos + 1));
   }
-}
-
-/// Get Base64 decoded size.
-///
-/// @param test test string.
-/// @return decoded size if base64 encoded string, or zero otherwise.
-///
-inline std::size_t GetBase64Size(const char* test) {
-  return GetBase64Size(std::string(NullOption(test, "")));
 }
 
 /// Base64 decoding.
@@ -107,13 +92,14 @@ inline std::size_t GetBase64Size(const char* test) {
 /// @return decode data.
 ///
 template <typename OutputIterator>
-inline bool DecodeBase64(const std::string& base64, OutputIterator first) {
+inline bool DecodeBase64(const char* base64, OutputIterator first) {
   if (!IsBase64(base64)) {
     return false;
   }
 
-  std::string base64_table = kBase64Table;
-  for (std::string::const_iterator it = base64.begin(); it != base64.end();) {
+  const std::string base64_table(kBase64Table);
+  const std::string str(base64);
+  for (std::string::const_iterator it = str.begin(); it != str.end();) {
     std::string::size_type s1 = base64_table.find(*(it++));
     std::string::size_type s2 = base64_table.find(*(it++));
     std::string::size_type s3 = base64_table.find(*(it++));
@@ -129,16 +115,6 @@ inline bool DecodeBase64(const std::string& base64, OutputIterator first) {
   }
 
   return true;
-}
-
-/// Base64 decoding.
-///
-/// @param base64 base64 string.
-/// @return decode data.
-///
-template <typename OutputIterator>
-inline bool DecodeBase64(const char* base64, OutputIterator first) {
-  return DecodeBase64(std::string(NullOption(base64, "")), first);
 }
 
 }  // namespace pettyutil

@@ -8,6 +8,7 @@
 #define PETTYUTIL_PETTY_HELPER_H_
 
 #include <cstddef>
+#include <utility>
 
 /// Non-copyable class macro.
 /// Macro name is with reference to the Google Style Guides.
@@ -21,16 +22,28 @@
 
 namespace pettyutil {
 
-/// Null option.
+/// Null pointer option.
 ///
-/// @param data   source data.
-/// @param option option data.
-/// @return if source data is not null, is source data.
-///         other case is option data.
+/// @param data   source data pointer.
+/// @param option option data pointer.
+/// @return source data pointer if source data pointer is not null,
+///         or option data pointer otherwise.
 ///
 template <typename T>
-inline T NullOption(T data, T option) {
+inline T* NullOption(T* data, T* option) {
   return (data != nullptr) ? data : option;
+}
+
+/// Null option.
+///
+/// @param data   source data pointer.
+/// @param option option data.
+/// @return source data if source data pointer is not null,
+///         or option data otherwise.
+///
+template <typename T>
+inline T NullOption(T* data, T option) {
+  return (data != nullptr) ? *data : std::move(option);
 }
 
 /// Count of array.
