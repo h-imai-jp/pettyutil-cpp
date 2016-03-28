@@ -419,16 +419,6 @@ class JsonObjectImple : public JsonValue, public pettyutil::JsonObject {
     }
   }
 
-  /// Implement of JsonObject::OptionBoolean method.
-  ///
-  bool OptionBoolean(const std::string& name, bool option) const override {
-    if (std::unique_ptr<bool> value = GetBoolean(name)) {
-      return *value;
-    } else {
-      return option;
-    }
-  }
-
   /// Implement of JsonObject::GetString method.
   ///
   std::unique_ptr<std::string> GetString(
@@ -451,17 +441,6 @@ class JsonObjectImple : public JsonValue, public pettyutil::JsonObject {
     }
   }
 
-  /// Implement of JsonObject::OptionString method.
-  ///
-  std::string OptionString(const std::string& name,
-                           const std::string& option) const override {
-    if (std::unique_ptr<std::string> value = GetString(name)) {
-      return std::move(*value);
-    } else {
-      return option;
-    }
-  }
-
   /// Implement of JsonObject::GetInt32 method.
   ///
   std::unique_ptr<std::int32_t> GetInt32(
@@ -481,17 +460,6 @@ class JsonObjectImple : public JsonValue, public pettyutil::JsonObject {
       return container_.at(name)->ToInt32();
     } else {
       return std::unique_ptr<std::int32_t>();
-    }
-  }
-
-  /// Implement of JsonObject::OptionInt32 method.
-  ///
-  std::int32_t OptionInt32(const std::string& name,
-                           std::int32_t option) const override {
-    if (std::unique_ptr<std::int32_t> value = GetInt32(name)) {
-      return *value;
-    } else {
-      return option;
     }
   }
 
@@ -675,16 +643,6 @@ class JsonArrayImple : public JsonValue, public pettyutil::JsonArray {
     }
   }
 
-  /// Implement of JsonArray::OptionBoolean method.
-  ///
-  bool OptionBoolean(std::size_t index, bool option) const override {
-    if (std::unique_ptr<bool> value = GetBoolean(index)) {
-      return *value;
-    } else {
-      return option;
-    }
-  }
-
   /// Implement of JsonArray::GetString method.
   ///
   std::unique_ptr<std::string> GetString(std::size_t index) const override {
@@ -706,17 +664,6 @@ class JsonArrayImple : public JsonValue, public pettyutil::JsonArray {
     }
   }
 
-  /// Implement of JsonArray::OptionString method.
-  ///
-  std::string OptionString(std::size_t index,
-                           const std::string& option) const override {
-    if (std::unique_ptr<std::string> value = GetString(index)) {
-      return std::move(*value);
-    } else {
-      return option;
-    }
-  }
-
   /// Implement of JsonArray::GetInt32 method.
   ///
   std::unique_ptr<std::int32_t> GetInt32(std::size_t index) const override {
@@ -735,17 +682,6 @@ class JsonArrayImple : public JsonValue, public pettyutil::JsonArray {
       return container_.at(index)->ToInt32();
     } else {
       return std::unique_ptr<std::int32_t>();
-    }
-  }
-
-  /// Implement of JsonArray::OptionInt32 method.
-  ///
-  std::int32_t OptionInt32(std::size_t index,
-                           std::int32_t option) const override {
-    if (std::unique_ptr<std::int32_t> value = GetInt32(index)) {
-      return *value;
-    } else {
-      return option;
     }
   }
 
