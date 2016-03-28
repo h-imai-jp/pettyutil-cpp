@@ -8,6 +8,7 @@
 #define PETTYUTIL_PETTY_HELPER_H_
 
 #include <cstddef>
+#include <utility>
 
 /// Non-copyable class macro.
 /// Macro name is with reference to the Google Style Guides.
@@ -42,7 +43,7 @@ inline T* NullOption(T* data, T* option) {
 ///
 template <typename T>
 inline T NullOption(T* data, T option) {
-  return (data != nullptr) ? *data : option;
+  return (data != nullptr) ? *data : std::move(option);
 }
 
 /// Count of array.
