@@ -84,6 +84,7 @@
     <ClCompile Include="..\src\json.cpp" />
     <ClCompile Include="..\test\src\base64_test.cpp" />
     <ClCompile Include="..\test\src\json_test.cpp" />
+    <ClCompile Include="..\test\src\petty_helper_test.cpp" />
     <ClCompile Include="..\test\src\string_util_test.cpp" />
     <ClCompile Include="..\test\src\task_test.cpp" />
     <ClCompile Include="..\test\src\unsorted_map_test.cpp" />
