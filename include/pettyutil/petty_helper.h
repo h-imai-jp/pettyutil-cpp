@@ -22,18 +22,6 @@
 
 namespace pettyutil {
 
-/// Null pointer option.
-///
-/// @param data   source data pointer.
-/// @param option option data pointer.
-/// @return source data pointer if source data pointer is not null,
-///         or option data pointer otherwise.
-///
-template <typename T>
-inline T* NullOption(T* data, T* option) {
-  return (data != nullptr) ? data : option;
-}
-
 /// Null option.
 ///
 /// @param data   source data pointer.
@@ -44,6 +32,18 @@ inline T* NullOption(T* data, T* option) {
 template <typename T>
 inline T NullOption(T* data, T option) {
   return (data != nullptr) ? *data : std::move(option);
+}
+
+/// Null pointer option.
+///
+/// @param data   source data pointer.
+/// @param option option data pointer.
+/// @return source data pointer if source data pointer is not null,
+///         or option data pointer otherwise.
+///
+template <typename T>
+inline T* NullOptionPtr(T* data, T* option) {
+  return (data != nullptr) ? data : option;
 }
 
 /// Count of array.

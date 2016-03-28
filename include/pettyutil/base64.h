@@ -59,7 +59,7 @@ inline std::string EncodeBase64(InputIterator first, InputIterator last) {
 /// @return true if base64 encoded string, or false otherwise.
 ///
 inline bool IsBase64(const char* base64) {
-  const std::string test(NullOption(base64, ""));
+  const std::string test(NullOptionPtr(base64, ""));
 
   if (test.empty() || ((test.length() % 4) != 0)) {
     return false;
