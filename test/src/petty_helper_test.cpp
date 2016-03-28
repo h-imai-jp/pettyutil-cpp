@@ -5,6 +5,7 @@
 // SPDX-License-Identifier: BSL-1.0
 //
 #include <memory>
+#include <string>
 
 #include "gtest/gtest.h"
 #include "pettyutil/petty_helper.h"
@@ -20,6 +21,12 @@ TEST(NullOptionTest, NotNull) {
 
   int test2 = pettyutil::NullOption(std::unique_ptr<int>(new int(1)).get(), 0);
   EXPECT_EQ(1, test2);
+
+  auto test3 = std::unique_ptr<std::string>(new std::string("test3"));
+  auto test4 = pettyutil::NullOption(test3.get(), std::string("option"));
+  EXPECT_STREQ("test3", test4.c_str());
+  ASSERT_TRUE(test3.get() != nullptr);
+  EXPECT_STREQ("test3", test3->c_str());
 }
 
 /// pettyutil::NullOption is null test.
@@ -31,6 +38,10 @@ TEST(NullOptionTest, IsNull) {
 
   int test2 = pettyutil::NullOption(std::unique_ptr<int>().get(), 0);
   EXPECT_EQ(0, test2);
+
+  auto test3 = pettyutil::NullOption(std::unique_ptr<std::string>().get(),
+                                     std::string("option"));
+  EXPECT_STREQ("option", test3.c_str());
 }
 
 /// pettyutil::CountOf test.
