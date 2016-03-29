@@ -7,36 +7,37 @@
 #include <stdarg.h>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 #include "gtest/gtest.h"
 #include "pettyutil/string_util.h"
 
 namespace {
 
-/// thincautility::StringFormat format test.
+/// pettyutil::StringFormat format test.
 ///
 TEST(StringFormatTest, Format) {
-  std::string test = pettyutil::StringFormat("test%d", 1);
+  auto test = pettyutil::StringFormat("test%d", 1);
   EXPECT_STREQ("test1", test.c_str());
 }
 
 std::string SubFormat(const char* format, ...) {
   va_list args;
   va_start(args, format);
-  std::string value = pettyutil::StringFormatV(format, args);
+  auto value = pettyutil::StringFormatV(format, args);
   va_end(args);
 
   return std::move(value);
 }
 
-/// thincautility::StringFormatV format test.
+/// pettyutil::StringFormatV format test.
 ///
 TEST(StringFormatVTest, Format) {
-  std::string test = SubFormat("test%d", 2);
+  auto test = SubFormat("test%d", 2);
   EXPECT_STREQ("test2", test.c_str());
 }
 
-/// thincautility::TryStringToInteger octal test.
+/// pettyutil::TryStringToInteger octal test.
 ///
 TEST(TryStringToIntegerTest, Octal) {
   int test1_value = 0;
@@ -68,7 +69,7 @@ TEST(TryStringToIntegerTest, Octal) {
   EXPECT_FALSE(test6_result);
 }
 
-/// thincautility::TryStringToInteger decimal test.
+/// pettyutil::TryStringToInteger decimal test.
 ///
 TEST(TryStringToIntegerTest, Decimal) {
   int test1_value = 0;
@@ -100,7 +101,7 @@ TEST(TryStringToIntegerTest, Decimal) {
   EXPECT_FALSE(test6_result);
 }
 
-/// thincautility::TryStringToInteger hex test.
+/// pettyutil::TryStringToInteger hex test.
 ///
 TEST(TryStringToIntegerTest, Hex) {
   int test1_value = 0;
@@ -137,7 +138,7 @@ TEST(TryStringToIntegerTest, Hex) {
   EXPECT_FALSE(test7_result);
 }
 
-/// thincautility::TryStringToInteger auto test.
+/// pettyutil::TryStringToInteger auto test.
 ///
 TEST(TryStringToIntegerTest, Auto) {
   int test1_value = 0;
@@ -161,7 +162,7 @@ TEST(TryStringToIntegerTest, Auto) {
   EXPECT_EQ(15, test4_value);
 }
 
-/// thincautility::StringToInteger octal test.
+/// pettyutil::StringToInteger octal test.
 ///
 TEST(StringToIntegerTest, Octal) {
   int test1_value = pettyutil::StringToInteger<int>("10", 8);
@@ -180,7 +181,7 @@ TEST(StringToIntegerTest, Octal) {
   EXPECT_EQ(0, test5_value);
 }
 
-/// thincautility::StringToInteger decimal test.
+/// pettyutil::StringToInteger decimal test.
 ///
 TEST(StringToIntegerTest, Decimal) {
   int test1_value = pettyutil::StringToInteger<int>("8", 10);
@@ -199,7 +200,7 @@ TEST(StringToIntegerTest, Decimal) {
   EXPECT_EQ(0, test5_value);
 }
 
-/// thincautility::StringToInteger hex test.
+/// pettyutil::StringToInteger hex test.
 ///
 TEST(StringToIntegerTest, Hex) {
   int test1_value = pettyutil::StringToInteger<int>("8", 16);
@@ -221,7 +222,7 @@ TEST(StringToIntegerTest, Hex) {
   EXPECT_EQ(0, test6_value);
 }
 
-/// thincautility::StringToInteger auto test.
+/// pettyutil::StringToInteger auto test.
 ///
 TEST(StringToIntegerTest, Auto) {
   int test1_value = pettyutil::StringToInteger<int>("010", 0);
@@ -237,7 +238,7 @@ TEST(StringToIntegerTest, Auto) {
   EXPECT_EQ(15, test4_value);
 }
 
-/// thincautility::StringStartsWith true test.
+/// pettyutil::StringStartsWith true test.
 ///
 TEST(StringStartsWithTest, True) {
   bool test1 = pettyutil::StringStartsWith("test1", "test");
@@ -247,10 +248,10 @@ TEST(StringStartsWithTest, True) {
   EXPECT_TRUE(test2);
 }
 
-/// thincautility::StringStartsWith false test.
+/// pettyutil::StringStartsWith false test.
 ///
 TEST(StringStartsWithTest, False) {
-  bool test1 = pettyutil::StringStartsWith("test1", "tast");
+  bool test1 = pettyutil::StringStartsWith("1test", "test");
   EXPECT_FALSE(test1);
 
   bool test2 = pettyutil::StringStartsWith("test2", "TEST2");
@@ -260,7 +261,7 @@ TEST(StringStartsWithTest, False) {
   EXPECT_FALSE(test3);
 }
 
-/// thincautility::StringEndsWith true test.
+/// pettyutil::StringEndsWith true test.
 ///
 TEST(StringEndsWithTest, True) {
   bool test1 = pettyutil::StringEndsWith("1test", "test");
@@ -270,10 +271,10 @@ TEST(StringEndsWithTest, True) {
   EXPECT_TRUE(test2);
 }
 
-/// thincautility::StringEndsWith false test.
+/// pettyutil::StringEndsWith false test.
 ///
 TEST(StringEndsWithTest, False) {
-  bool test1 = pettyutil::StringEndsWith("1test", "tast");
+  bool test1 = pettyutil::StringEndsWith("test1", "test");
   EXPECT_FALSE(test1);
 
   bool test2 = pettyutil::StringEndsWith("2test", "2TEST");
@@ -283,50 +284,46 @@ TEST(StringEndsWithTest, False) {
   EXPECT_FALSE(test3);
 }
 
-/// thincautility::StringReplaceAll replace test.
+/// pettyutil::StringReplaceAll replace test.
 ///
 TEST(StringReplaceAllTest, Replace) {
-  std::string test1 = "aaaa bbbb cccc";
-  pettyutil::StringReplaceAll(&test1, "bbbb", "dddd");
+  auto test1 = pettyutil::StringReplaceAll("aaaa bbbb cccc", "bbbb", "dddd");
   EXPECT_STREQ("aaaa dddd cccc", test1.c_str());
 
-  std::string test2 = "aaaa bbbb aaaa";
-  pettyutil::StringReplaceAll(&test2, "aaaa", "dddd");
+  auto test2 = pettyutil::StringReplaceAll("aaaa bbbb aaaa", "aaaa", "dddd");
   EXPECT_STREQ("dddd bbbb dddd", test2.c_str());
 
-  std::string test3 = "aaaa bbbb cccc";
-  pettyutil::StringReplaceAll(&test3, "dddd", "eeee");
+  auto test3 = pettyutil::StringReplaceAll("aaaa bbbb cccc", "dddd", "eeee");
   EXPECT_STREQ("aaaa bbbb cccc", test3.c_str());
 
-  std::string test4 = "a aa aaa aaaa";
-  pettyutil::StringReplaceAll(&test4, "aa", "a");
+  auto test4 = pettyutil::StringReplaceAll("a aa aaa aaaa", "aa", "a");
   EXPECT_STREQ("a a aa aa", test4.c_str());
 }
 
-/// thincautility::StringSplit replace test.
+/// pettyutil::StringSplit replace test.
 ///
 TEST(StringSplitTest, Split) {
-  std::vector<std::string> test1 = pettyutil::StringSplit("test1:test2:test3",
-                                                      pettyutil::IsAnyOf(":"));
+  auto test1 = pettyutil::StringSplit("test1:test2:test3",
+                                      pettyutil::IsAnyOf(":"));
   ASSERT_EQ(3, test1.size());
   EXPECT_STREQ("test1", test1.at(0).c_str());
   EXPECT_STREQ("test2", test1.at(1).c_str());
   EXPECT_STREQ("test3", test1.at(2).c_str());
 
-  std::vector<std::string> test2 = pettyutil::StringSplit("test1,test2 test3",
-                                                      pettyutil::IsAnyOf(", "));
+  auto test2 = pettyutil::StringSplit("test1,test2 test3",
+                                      pettyutil::IsAnyOf(", "));
   ASSERT_EQ(3, test2.size());
   EXPECT_STREQ("test1", test2.at(0).c_str());
   EXPECT_STREQ("test2", test2.at(1).c_str());
   EXPECT_STREQ("test3", test2.at(2).c_str());
 
-  std::vector<std::string> test3 = pettyutil::StringSplit("test1test2test3",
-                                                      pettyutil::IsAnyOf(":"));
+  auto test3 = pettyutil::StringSplit("test1test2test3",
+                                      pettyutil::IsAnyOf(":"));
   ASSERT_EQ(1, test3.size());
   EXPECT_STREQ("test1test2test3", test3.at(0).c_str());
 
-  std::vector<std::string> test4 = pettyutil::StringSplit(":test1::test2::test3:",
-                                                      pettyutil::IsAnyOf(":"));
+  auto test4 = pettyutil::StringSplit(":test1::test2::test3:",
+                                      pettyutil::IsAnyOf(":"));
   ASSERT_EQ(7, test4.size());
   EXPECT_TRUE(test4.at(0).empty());
   EXPECT_STREQ("test1", test4.at(1).c_str());
@@ -337,16 +334,11 @@ TEST(StringSplitTest, Split) {
   EXPECT_TRUE(test4.at(6).empty());
 }
 
-/// thincautility::ArrayToString test fixture.
+/// pettyutil::ArrayToString test fixture.
 ///
 class ArrayToStringTest : public ::testing::Test {
  protected:
   virtual void SetUp() {
-    byte_array_.push_back(0x00);
-    byte_array_.push_back(0x7f);
-    byte_array_.push_back(0x80);
-    byte_array_.push_back(0xff);
-
     int_array_.push_back(0x00);
     int_array_.push_back(0x7f);
     int_array_.push_back(0x80);
@@ -358,41 +350,35 @@ class ArrayToStringTest : public ::testing::Test {
     ascii_array_.push_back(0x44);
   }
 
-  std::vector<std::uint8_t> byte_array_;
   std::vector<int> int_array_;
   std::vector<int> ascii_array_;
 };
 
-/// thincautility::ArrayToString to hex byte test.
+/// pettyutil::ArrayToString to hex byte test.
 ///
 TEST_F(ArrayToStringTest, ToHexByte) {
-  std::string test1 = pettyutil::ArrayToString(byte_array_.begin(),
-                                           byte_array_.end(),
-                                           pettyutil::ToHexByte(":"));
+  auto test1 = pettyutil::ArrayToString(int_array_.begin(),
+                                        int_array_.end(),
+                                        pettyutil::ToHexByte(":"));
   EXPECT_STREQ("00:7F:80:FF", test1.c_str());
 
-  std::string test2 = pettyutil::ArrayToString(byte_array_.begin(),
-                                           byte_array_.end(),
-                                           pettyutil::ToHexByte(" ", false));
+  auto test2 = pettyutil::ArrayToString(int_array_.begin(),
+                                        int_array_.end(),
+                                        pettyutil::ToHexByte(" ", false));
   EXPECT_STREQ("00 7f 80 ff", test2.c_str());
 
-  std::string test3 = pettyutil::ArrayToString(int_array_.begin(),
-                                           int_array_.end(),
-                                           pettyutil::ToHexByte(":"));
-  EXPECT_STREQ("00:7F:80:FF", test3.c_str());
-
-  std::string test4 = pettyutil::ArrayToString(int_array_.begin(),
-                                           int_array_.end(),
-                                           pettyutil::ToHexByte(" ", false));
-  EXPECT_STREQ("00 7f 80 ff", test4.c_str());
+  auto test3 = pettyutil::ArrayToString(ascii_array_.begin(),
+                                        ascii_array_.end(),
+                                        pettyutil::ToHexByte(""));
+  EXPECT_STREQ("41424344", test3.c_str());
 }
 
-/// thincautility::ArrayToString to multi byte test.
+/// pettyutil::ArrayToString to multi byte test.
 ///
 TEST_F(ArrayToStringTest, ToMultiByte) {
-  std::string test = pettyutil::ArrayToString(ascii_array_.begin(),
-                                          ascii_array_.end(),
-                                          pettyutil::ToMultiByte());
+  auto test = pettyutil::ArrayToString(ascii_array_.begin(),
+                                       ascii_array_.end(),
+                                       pettyutil::ToMultiByte());
   EXPECT_STREQ("ABCD", test.c_str());
 }
 

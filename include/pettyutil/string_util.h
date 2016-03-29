@@ -16,6 +16,8 @@
 #include <utility>
 #include <vector>
 
+#include "petty_helper.h"
+
 #if defined(_MSC_VER) && !defined(va_copy)
 # define va_copy(dest, src)  ((dest) = (src))
 #endif
@@ -58,15 +60,15 @@ inline std::string StringFormat(const char* format, ...) {
 
 /// String front whitespace length.
 ///
-/// @param str string.
+/// @param source source string.
 /// @return whitespace length.
 ///
-inline std::string::size_type StringFrontWhitespaceLength(const char* str) {
+inline std::string::size_type StringFrontWhitespaceLength(const char* source) {
   std::string::size_type length = 0;
 
-  if (str != nullptr) {
+  if (source != nullptr) {
     char character;
-    while ((character = str[length]) != '\0') {
+    while ((character = source[length]) != '\0') {
       if (((character >= 0x09) && (character <= 0x0d)) || (character == 0x20)) {
         length++;
       } else {
@@ -80,16 +82,16 @@ inline std::string::size_type StringFrontWhitespaceLength(const char* str) {
 
 /// String back whitespace length.
 ///
-/// @param str string.
+/// @param source source string.
 /// @return whitespace length.
 ///
-inline std::string::size_type StringBackWhitespaceLength(const char* str) {
+inline std::string::size_type StringBackWhitespaceLength(const char* source) {
   std::size_t length = 0;
 
-  if (str != nullptr) {
-    length = ::strlen(str);
+  if (source != nullptr) {
+    length = ::strlen(source);
     while (length > 0) {
-      char character = str[length - 1];
+      char character = source[length - 1];
       if (((character >= 0x09) && (character <= 0x0d)) || (character == 0x20)) {
         length--;
       } else {
@@ -103,11 +105,11 @@ inline std::string::size_type StringBackWhitespaceLength(const char* str) {
 
 /// String front whitespace trim.
 ///
-/// @param str string.
+/// @param source source string.
 /// @return trim string.
 ///
-inline std::string StringFrontTrim(const char* str) {
-  const char* front_trim = str + StringFrontWhitespaceLength(str);
+inline std::string StringFrontTrim(const char* source) {
+  const char* front_trim = source + StringFrontWhitespaceLength(source);
   return std::string(front_trim);
 }
 
@@ -122,7 +124,7 @@ inline std::string StringBackTrim(const char* str) {
 
 /// String both ends whitespace trim.
 ///
-/// @param str string.
+/// @param source source string.
 /// @return trim string.
 ///
 inline std::string StringTrim(const char* str) {
@@ -132,44 +134,44 @@ inline std::string StringTrim(const char* str) {
 
 /// Try convert string to integer.
 ///
-/// @param str   numeric string.
-/// @param radix radix.
-/// @param value output value.
+/// @param source numeric string.
+/// @param radix  radix.
+/// @param value  output value.
 /// @return true if convert successful, otherwise false.
 ///
 template <typename Integer>
-inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
-  if (str == nullptr) {
+inline bool TryStringToInteger(const char* source, int radix, Integer* value) {
+  if (source == nullptr) {
     return false;
   }
 
   // front trim
-  str = str + StringFrontWhitespaceLength(str);
+  source = source + StringFrontWhitespaceLength(source);
 
   // sign
   Integer sign;
   Integer limit;
-  if (*str == '-') {
+  if (*source == '-') {
     if (std::numeric_limits<Integer>::min() == 0) {
       // is unsigned
       return false;
     }
-    str++;
+    source++;
     sign = static_cast<Integer>(-1);
     limit = std::numeric_limits<Integer>::max() - 1;
   } else {
-    if (*str == '+') {
-      str++;
+    if (*source == '+') {
+      source++;
     }
     sign = static_cast<Integer>(1);
     limit = std::numeric_limits<Integer>::max();
   }
 
   // radix
-  if (str[0] == '0') {
-    if ((str[1] | 0x20) == 'x') {
+  if (source[0] == '0') {
+    if ((source[1] | 0x20) == 'x') {
       if ((radix == 0) || (radix == 16)) {
-        str += 2;
+        source += 2;
         radix = 16;
       }
     } else if (radix == 0) {
@@ -180,19 +182,19 @@ inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
   }
 
   // back trim
-  std::size_t length = StringBackWhitespaceLength(str);
+  std::size_t length = StringBackWhitespaceLength(source);
   if (length == 0) {
     return false;
   }
 
   // convert string to integer
   Integer result = 0;
-  for (std::size_t i = 0; i < length; i++, str++) {
+  for (std::size_t i = 0; i < length; i++, source++) {
     Integer digit;
 
-    char code = *str | 0x20;
-    if ((*str >= '0') && (*str <= '9')) {
-      digit = *str - '0';
+    char code = *source | 0x20;
+    if ((*source >= '0') && (*source <= '9')) {
+      digit = *source - '0';
     } else if ((code >= 'a') && (code <= 'z')) {
       digit = 10 + (code - 'a');
     } else {
@@ -216,15 +218,15 @@ inline bool TryStringToInteger(const char* str, int radix, Integer* value) {
 
 /// Convert string to integer.
 ///
-/// @param str   numeric string.
-/// @param radix radix.
+/// @param source numeric string.
+/// @param radix  radix.
 /// @return integer value.
 ///
 template <typename Integer>
-inline Integer StringToInteger(const char* str, int radix) {
+inline Integer StringToInteger(const char* source, int radix) {
   Integer value;
 
-  if (TryStringToInteger(str, radix, &value)) {
+  if (TryStringToInteger(source, radix, &value)) {
     return value;
   } else {
     return 0;
@@ -233,67 +235,83 @@ inline Integer StringToInteger(const char* str, int radix) {
 
 /// Starts with string.
 ///
-/// @param value  value string.
+/// @param source source string.
 /// @param prefix prefix string.
-/// @return ture if value string is starts with prefix string.
+/// @return ture if value string is starts with prefix string, otherwise false.
 ///
-inline bool StringStartsWith(const std::string& value,
-                             const std::string& prefix) {
-  return (value.find(prefix) == 0);
+inline bool StringStartsWith(const char* source,
+                             const char* prefix) {
+  return ((source != nullptr) && (prefix != nullptr)
+      && (::strstr(source, prefix) == source));
 }
 
 /// Ends with string.
 ///
-/// @param value  value string.
+/// @param source source string.
 /// @param suffix suffix string.
 /// @return ture if value string is ends with suffix string.
 ///
-inline bool StringEndsWith(const std::string& value,
-                           const std::string& suffix) {
-  return (suffix.length() <= value.length())
-      && std::equal(suffix.rbegin(), suffix.rend(), value.rbegin());
+inline bool StringEndsWith(const char* source,
+                           const char* suffix) {
+  if ((source != nullptr) && (suffix != nullptr)) {
+    std::size_t value_length = ::strlen(source);
+    std::size_t suffix_length = ::strlen(suffix);
+    return ((value_length >= suffix_length)
+        && (::strstr(source + (value_length - suffix_length),
+                     suffix) != nullptr));
+  } else {
+    return false;
+  }
 }
 
 /// String replace all.
 ///
-/// @param base       target string.
+/// @param source     source string.
 /// @param old_string string to be replaced.
 /// @param new_string string to replace all occurrences of old_string.
+/// @return replace string.
 ///
-inline void StringReplaceAll(std::string* base,
-                             const std::string& old_string,
-                             const std::string& new_string) {
-  if (base != 0) {
-    std::string::size_type current = 0, found;
-    while ((found = base->find(old_string, current)) != std::string::npos) {
-      base->replace(found, old_string.length(), new_string);
-      current = found + new_string.length();
+inline std::string StringReplaceAll(const char* source,
+                                    const char* old_string,
+                                    const char* new_string) {
+  if ((source != nullptr) && (old_string != nullptr)) {
+    std::string buffer;
+    std::size_t old_length = ::strlen(old_string);
+
+    new_string = NullOptionPtr(new_string, "");
+    while (const char* found = ::strstr(source, old_string)) {
+      buffer.append(source, found - source).append(new_string);
+      source = found + old_length;
     }
+    buffer.append(source);
+
+    return std::move(buffer);
+  } else {
+    return std::string();
   }
 }
 
 /// String split.
 ///
-/// @param source    string format.
+/// @param source    string string.
 /// @param delimiter delimiter function object.
 /// @return split strings.
 ///
 template <class Delimiter>
-inline std::vector<std::string> StringSplit(const std::string& source,
+inline std::vector<std::string> StringSplit(const char* source,
                                             Delimiter delimiter) {
   std::vector<std::string> splits;
 
-  std::string::size_type current = 0;
-  for (;;) {
+  if (source != nullptr) {
+    std::string buffer;
+
     std::string::size_type delimit_length = 1;
-    std::string::size_type found = delimiter(source, current, &delimit_length);
-    if (found == std::string::npos) {
-      break;
+    while (const char* found = delimiter(source, &delimit_length)) {
+      splits.push_back(std::string(source, found - source));
+      source = found + delimit_length;
     }
-    splits.push_back(source.substr(current, found - current));
-    current = found + delimit_length;
+    splits.push_back(std::string(source));
   }
-  splits.push_back(source.substr(current, source.length() - current));
 
   return std::move(splits);
 }
@@ -306,7 +324,8 @@ class IsAnyOf {
   ///
   /// @param delimit delimiters.
   ///
-  inline explicit IsAnyOf(const std::string& delimit) : delimit_(delimit) {}
+  inline explicit IsAnyOf(const char* delimit)
+      : delimit_(NullOptionPtr(delimit, "")) {}
 
   /// Copy delimiter.
   ///
@@ -327,14 +346,12 @@ class IsAnyOf {
   /// Split string function.
   ///
   /// @param source         source string.
-  /// @param current        current position.
   /// @param delimit_length output delimiter length.
-  /// @return split position.
+  /// @return next delimit.
   ///
-  inline std::string::size_type operator()(const std::string& source,
-                                           std::string::size_type current,
-                                           std::string::size_type*) {
-    return source.find_first_of(delimit_, current);
+  inline const char* operator()(const char* source,
+                                std::string::size_type*) {
+    return ::strpbrk(source, delimit_.c_str());
   }
 
  private:
@@ -353,16 +370,13 @@ template <typename InputIterator, class Converter>
 inline std::string ArrayToString(InputIterator first,
                                  InputIterator last,
                                  Converter converter) {
-  std::string str;
+  std::string buffer;
 
-  if (first != last) {
-    converter(*first, &str, true);
-    while (++first != last) {
-      converter(*first, &str, false);
-    }
+  for (std::size_t index = 0; first != last; ++first, index++) {
+    converter(*first, index, &buffer);
   }
 
-  return std::move(str);
+  return std::move(buffer);
 }
 
 /// Hexadecimal byte string converter function class.
@@ -374,16 +388,16 @@ class ToHexByte {
   /// @param separator separate string.
   /// @param is_upper  is upper character.
   ///
-  inline ToHexByte(const std::string& separator, bool is_upper)
-      : separator_(separator),
+  inline ToHexByte(const char* separator, bool is_upper)
+      : separator_(NullOptionPtr(separator, "")),
         hex_(is_upper ? 'A' : 'a') {}
 
   /// Construct converter.
   ///
   /// @param separator separate string.
   ///
-  inline explicit ToHexByte(const std::string& separator)
-      : separator_(separator),
+  inline explicit ToHexByte(const char* separator)
+      : separator_(NullOptionPtr(separator, "")),
         hex_('A') {}
 
   /// Copy converter.
@@ -406,20 +420,20 @@ class ToHexByte {
 
   /// Convert string function.
   ///
-  /// @param src      source value.
-  /// @param dest     destination string.
-  /// @param is_first is first.
+  /// @param source      source value.
+  /// @param index       index.
+  /// @param destination destination string.
   ///
   template <typename T>
-  void operator()(T src, std::string* dest, bool is_first) {
-    if (!is_first) {
-      dest->append(separator_);
+  void operator()(T source, std::size_t index, std::string* destination) {
+    if (index != 0) {
+      destination->append(separator_);
     }
 
-    char high = (static_cast<char>(src) >> 4) & 0x0f;
-    char low = static_cast<char>(src) & 0x0f;
-    dest->push_back((high < 10) ? '0' + high : hex_ + (high - 10));
-    dest->push_back((low < 10) ? '0' + low : hex_ + (low - 10));
+    char high = (static_cast<char>(source) >> 4) & 0x0f;
+    char low = static_cast<char>(source) & 0x0f;
+    destination->push_back((high < 10) ? '0' + high : hex_ + (high - 10));
+    destination->push_back((low < 10) ? '0' + low : hex_ + (low - 10));
   }
 
  private:
@@ -434,12 +448,13 @@ class ToHexByte {
 struct ToMultiByte {
   /// Convert string function.
   ///
-  /// @param src  source value.
-  /// @param dest destination string.
+  /// @param source      source value.
+  /// @param index       index.
+  /// @param destination destination string.
   ///
   template <typename T>
-  void operator()(T src, std::string* dest, bool) {
-    dest->push_back(static_cast<char>(src & 0xff));
+  void operator()(T source, std::size_t, std::string* destination) {
+    destination->push_back(static_cast<char>(source & 0xff));
   }
 };
 
