@@ -359,6 +359,24 @@ class IsAnyOf {
   std::string delimit_;
 };
 
+/// Convert string to array.
+///
+/// @param source    source string.
+/// @param converter value converter.
+/// @return convert array.
+///
+template <typename T, class Converter>
+inline std::vector<T> StringToArray(const char* source,
+                                    Converter converter) {
+  std::vector<T> buffer;
+
+  while (source != nullptr) {
+    source = converter(source, &buffer);
+  }
+
+  return std::move(buffer);
+}
+
 /// Convert array to string.
 ///
 /// @param first     source data first.
@@ -425,7 +443,9 @@ class ToHexByte {
   /// @param destination destination string.
   ///
   template <typename T>
-  void operator()(T source, std::size_t index, std::string* destination) {
+  inline void operator()(T source,
+                         std::size_t index,
+                         std::string* destination) {
     if (index != 0) {
       destination->append(separator_);
     }
@@ -453,7 +473,7 @@ struct ToMultiByte {
   /// @param destination destination string.
   ///
   template <typename T>
-  void operator()(T source, std::size_t, std::string* destination) {
+  inline void operator()(T source, std::size_t, std::string* destination) {
     destination->push_back(static_cast<char>(source & 0xff));
   }
 };
