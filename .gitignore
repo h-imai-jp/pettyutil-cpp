@@ -1,3 +1,6 @@
+# System files
+.DS_Store
+
 # Compiled Object files
 *.slo
 *.lo
@@ -35,4 +38,5 @@
 *.lastbuildstate
 *.idb
 *.sdf
+*.opensdf
 */ipch
